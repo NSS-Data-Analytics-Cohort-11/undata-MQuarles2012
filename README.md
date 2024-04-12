@@ -23,6 +23,9 @@
 5. How many rows and columns are in `gdp_df`? What are the data types of each column?
 6. Drop the `Value Footnotes` column and rename the remaining three to 'Country', 'Year', and 'GDP_Per_Capita'.
 7. How many countries have data for all years? Which countries are missing many years of data? Look at the number of observations per year. What do you notice? 
+
+print(gdp_df['Country'].value_counts() != 33)
+
 8. In this question, you're going to create some plots to show the distribution of GDP per capita for the year 2020. Go to the Python Graph Gallery (https://www.python-graph-gallery.com/) and look at the different types of plots under the Distribution section. Create a histogram, a density plot, a boxplot, and a violin plot. What do you notice when you look at these plots? How do the plots compare and what information can you get out of one type that you can't necessarily get out of the others?
 9. What was the median GDP per capita value in 2020?
 10. For this question, you're going to create some visualizations to compare GDP per capita values for the years 1990, 2000, 2010, and 2020. Start by subsetting your data to just these 4 years into a new DataFrame named gdp_decades. Using this, create the following 4 plots:
@@ -49,3 +52,43 @@ Comment on what you observe has happened to GDP values over time and the relativ
 
 ### Bonus exercise:
 1.    Download another data set from the UN data (http://data.un.org/Explorer.aspx) to merge with your data and explore.
+
+
+
+datetime
+
+#The year data is an object data type, so I need to convert it to datetime. 
+#The only option I could find is turning it into YYYY-MM-DD format
+internet_df['Year_Time'] = pd.to_datetime(internet_df['Year'], errors='coerce')
+
+#Display the new column and data
+print(internet_df.head())
+
+
+Years
+#Create two variables for the two years
+internet_2000 = internet_df[internet_df.Year == "2000"]
+internet_2014 = internet_df[internet_df.Year == "2014"]
+both_years = internet_df[internet_df.Year.isin([2000, 2014])]
+
+data = {
+    'year': both_years['Year'],
+    'pct': both_years[both_years.Internet_Users_Pct.isin(['2000', '2014'])]
+}
+both_years_df = pd.DataFrame(data)
+
+
+Multiple value histogram: 
+# I want to create a histogram showing both years together. 
+both_years = internet_df[internet_df.Year.isin([2000, 2014])]
+# Plot the histograms of each group
+for y in both_years.Year.unique():
+    
+    # Filter the dataset on the variable
+    filtered_df = both_years[both_years.Year==y]
+    
+    # Add the histogram to the graphic
+    filtered_df.Internet_Users_Pct.hist()
+
+# Display the plot    
+plt.show()
